@@ -1,0 +1,21 @@
+# ╭──────────────────────────────────────ImplementationGuide───────────────────────────────────────╮
+# │  The properties below are used to create the ImplementationGuide resource. For a list of       │
+# │  supported properties, see: https://fshschool.org/sushi/configuration/                         │
+# ╰────────────────────────────────────────────────────────────────────────────────────────────────╯
+id: fhir.example
+canonical: http://example.org
+name: FHIRAuthoringCourseExampleIG
+status: draft
+description: "This FHIR implementation guide (IG) is an example for the Introduction to FHIR Authoring class."
+version: 0.1.0
+fhirVersion: 4.0.1
+dependencies:
+  hl7.fhir.us.core: 3.2.0
+copyrightYear: 2021+
+releaseLabel: ci-build
+# ╭────────────────────────────────────────────menu.xml────────────────────────────────────────────╮
+# │  To use a provided input/includes/menu.xml file, delete the "menu" property below.             │
+# ╰────────────────────────────────────────────────────────────────────────────────────────────────╯
+menu:
+  Home: index.html
+  Artifacts: artifacts.html
