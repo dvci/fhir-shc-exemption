@@ -1,0 +1,25 @@
+{
+    "patient": {
+        "name": "Exemption",
+        "description": "For representing the minimal information needed to identify an individual's vaccination exemption.",
+        "instructions": "exemption.html",
+        "profileSets": [
+          {
+            "name": "Exemption",
+            "scope": "For general use where no geographic-specific profile exists",
+            "slug": "shc-vaccination-exemption"
+          }
+        ]
+    },
+    "bundles": {
+        "name": "Bundles",
+        "description": "Defines the contents of the `fhirBundle` element in an Exemption SMART Health Card for a given use case.",
+        "profileSets": [
+          {
+            "name": "Vaccination Exemption Bundle",
+            "scope": "Immunization Exemption",
+            "slug": "shc-vaccination-exemption-bundle"
+          }
+        ]
+    }
+}
