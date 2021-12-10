@@ -5,6 +5,7 @@
 id: cards.smarthealth.exemption
 canonical: https://smarthealth.cards/exemption
 name: SMARTHealthCardsExemptionIG
+title: "SMART Health Cards: Exemptions - FHIR Implementation Guide"
 status: draft
 version: 0.1.0
 fhirVersion: 4.0.1
