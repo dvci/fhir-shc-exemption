@@ -1,0 +1,44 @@
+{
+    "resourceType": "Bundle",
+    "type": "collection",
+    "entry": [
+      {
+        "fullUrl": "resource:0",
+        "resource": {
+          "resourceType": "Patient",
+          "name": [
+            {
+              "family": "Anyperson",
+              "given": [
+                "Jane",
+                "D."
+              ]
+            }
+          ],
+          "birthDate": "1960-07-18"
+        }
+      },
+      {
+        "fullUrl": "resource:1",
+        "resource": {
+          "resourceType": "Observation",
+          "meta": {
+            "security": [{"system": "https://smarthealth.cards/ial", "code": "IAL1.2"}]
+          },
+          "status": "final",
+          "vaccineCode": {
+            "coding": [
+              {
+                "system": "local-gov-exemption-guidelines.org",
+                "code": "#vaccination-exemption"
+              }
+            ]
+          },
+          "patient": {
+            "reference": "resource:0"
+          },
+          "occurrenceDateTime": "2021-01-01"
+        }
+      }
+    ]
+  }
