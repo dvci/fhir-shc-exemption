@@ -1,20 +1,89 @@
-# SMART Health Cards for Vaccine Exemptions
+### Scope
 
-SMART Health Cards has focused on sharing "immutable clinical facts" like the record of a specific vaccine dose or lab result. Our data models have been designed to balance information content (i.e., details that a verifier needs in order to make a decision) with user privacy (i.e., to avoid over-sharing, and to avoid sharing sensitive information).
+Please note that **conveying "vaccination exemption status" is beyond the [SMART Health Cards] (SHCs) design intent.** However, some jurisdictions may wish to move ahead in this space. [VCI](https://vci.org) has developed this [FHIR Implementation Guide](https://www.hl7.org/fhir/implementationguide.html) (IG) to describe the relevant policy and technical considerations.
 
-Beyond simply requiring proof of vaccination or lab results, some jurisdictions are developing policies that assign an "exemption" status to individuals who can't or shouldn't or otherwise won't receive a vaccine. There is interest in developing an interoperable way to share these exemption details with verifiers. This doc describes design considerations and provides a technical roadmap.
+### SHC design principles
 
-* a key policy consideration for jurisdictions considering Vaccine Exemptions
-* a technical design recommendation for SMART Health Cards deployments that want to model Vaccine Exemptions
+The [SHC specification](https://spec.smarthealth.cards) is focused on facilitating the sharing of digitally signed "immutable clinical facts," such as the record of a specific vaccine dose or lab result.
 
-**Conveying "exemption status" is beyond the SMART Health Cards design intent.** Nevertheless, if jurisdictions intend to move ahead in this space, VCI has developed a set of policy and technical considerations.
+SHCs accomplish this by balancing information content (i.e., details that a verifier needs in order to make a decision) with user privacy (i.e., to avoid over-sharing, and to avoid sharing sensitive information). For example, the [SHC: Vaccination & Testing IG](https://vci.org/ig/vaccination-and-testing) includes the following section:
 
-### Understanding exemptions
+<div class="well" markdown="1">
+#### Privacy by design
 
-#### *Exempt* from vaccination vs "simply not vaccinated"?
-Vaccination policies vary widely by jurisdiction. Exemption policies will vary even more widely. A key policy question is whether an "exempt" individual is treated differently from an otherwise-unvaccinated individual. For example, does a "vaccine exempt" individual have more lenient testing or quarantine requirements (compared with an otherwise-unvaccinated individual) upon arrival at a travel destination? In real-world travel use cases, the answer has been "no" (with a strong basis in public health and risk mitigation, when "exempt" does not imply lower-risk).
+Special attention is payed in this IG to protecting the privacy of Holders.
+
+The design of the SMART Health Card specification results in the following characteristics of issued SMART Health Cards:
+
+1. The contents cannot be changed (without re-issuing the entire SMART Health Card).
+2. The entirety of the data within the SMART Health Card is transmitted from the Holder to the Verifier whenever a SMART Health Card is presented.
+
+**Therefore, information that is not strictly necessary for a legitimate Verifier use case SHALL NOT be included in SMART Health Cards.**
+
+For more information, please see [the data minimization and privacy section on the Profiles page](profiles.html#data-minimization-and-privacy).
+</div>
+
+The following policy and technical considerations are approached through the lens of these principles.
+
+### Actors
+
+In order to describe these considerations, it is necessary to first establish the primary actors in the typical SHC workflow:
+
+1. **Issuers** who produce the FHIR resources described in this IG.
+1. **Holders** who receive a [SMART Health Card] from an Issuer (which contains the FHIR resources described in this IG), and may display it to a Verifier.
+1. **Verifiers** who read and analyze the FHIR resources described in this IG.
+
+Issuers and Verifiers are considered "implementers" of this IG. Additionally, "wallet applications" used by Holders to store digital versions of their SHC are also considered implementers.
+
+### Policy considerations
+
+#### Do vaccination exemption SHCs provide utility to these actors?
+
+A key policy question is whether an "exempt" individual is treated differently from an otherwise-unvaccinated individual. For example, does a "vaccination exempt" individual have more lenient testing or quarantine requirements (compared with an otherwise-unvaccinated individual) upon arrival at a travel destination? If not, then the vaccination exemption SHC will not provide utility to the actors in the SHC workflow.
+
+If "vaccination exempt" individuals are treated differently,
+
+
+For example, for real-world COVID-19 travel use cases, the answer has been "no" (with a strong basis in public health and risk mitigation, when "exempt" does not imply lower-risk).
+
+For other vaccines required for travel, the answer may be "yes".
+
+**Recommendation:** Policymakers should consider the utility of
+
+#### Is interoperability between jurisdictions realistic?
+
+There are two interoperability concerns:
+
+1. Policy interoperability, meaning that a vaccination exemption SHC produced in Jurisdiction A is actionable in Jurisdiction B.
+1. Technical interoperability, meaning that Jurisdiction B can computably read/understand a vaccination exemption SHC produced by an Issuer in Jurisdiction A.
+
+Due to variation in vaccination exemption policies, it is unlikely that jurisdictions will achieve policy interoperability without significant coordination. There is therefore not a use case for a universally interoperable vaccination exemption SHC in the absence of such coordination, and the specifics of vaccination exemption policy are beyond the scope of this IG.
+
+Technical interoperability may be achieved by mutual agreement to follow the technical approach described below.
+
+#### Is interoperability between actors necessary?
+
+**Yes.** For example, wallet applications used by Holders must understand how to read/display vaccination exemption SHCs to facilitate the presentation of these SHCs by the holders. Likewise, Verifiers must know what to expect in a vaccination exemption SHC so they are prepared to read and understand the contents of the SHC.
+
+Note: There is a robust ecosystem of software for issuing, holding, validating, and verifying SHCs for vaccination status and lab test results. There is not (yet) such an ecosystem for vaccination exemption SHCs, and such an ecosystem cannot develop without an open standard describing how these SHCs are constructed. Without this ecosystem, jurisdictions implementing vaccination exemption SHCs will need to provide the technology for all actors themselves. Therefore, even without policy interoperability, there are benefits to all implementing jurisdictions in achieving technical interoperability so a software ecosystem can develop.
+
+**Recommendation:** Jurisdictions should follow the technical approach described in this IG.
+
+#### Should vaccination exemption SHC include the underlying reason for the exemption?
+
+SHCs were originally designed to communicate COVID-19 vaccination or lab results, which are relatively well-understood and generally non-sensitive in the context of a global pandemic response. So for vaccine and lab result verification, SHCs mitigate the challenge of managing different vaccination/testing policies in different jurisdictions by conveying the raw *inputs* to these policies (e.g., "negative COVID PCR test on 2021-10-08"), rather than high-level conclusions (e.g., "is save to travel until 2021-10-10"). Even so, VCI has been very careful to produce data models that minimize the information shared in a SMART Health Card vaccine or lab result. The flexibility gained by sharing "raw" inputs in non-privacy-sensitive domains like COVID-19 vaccinations and lab results is a good trade-off.
+
+When it comes to exemptions, the privacy analysis is much more challenging: some reasons for an exemption may be quite sensitive and outside the scope of information generally shared in the context of everyday life. Public health policy should not put individuals in a situation where they are asked to share information about their behavior problems, religious affiliation, research participation, etc. in the course of everyday life.
+
+*Note: It doesn't help use an "unpublished data dictionary" with opaque codes for the different exemption reasons; given the scope of adoption of SHCs, any obfuscated information will inevitably be reverse engineered and de-obfuscated.*
+
+**Recommendation:** SMART Health Cards should represent exemptions as a broad category, rather than naming the specific condition that is the cause for an exemption.
+
+
 
 → For international travel, an interoperable approach to exemptions may not be needed.
+
+Vaccination policies vary widely by jurisdiction. Exemption policies will vary even more widely.
 
 #### Exempt *because of* an allergy vs behavioral problem vs participation in research...?
 
@@ -31,17 +100,21 @@ Current draft policies do not differentiate treatment by exemption reason, meani
 → Within a jurisdiction, conveying an "is-exempt" status suffices (no specifics required).
 
 
+### Approach
+
+There are two possible approaches to modeling a vaccination exemption:
+
+1. Provide the medical condition(s) responsible for the exemption
+2. Provide a generic exemption without medical details
+
+While (1) is technically possible, it make put Holders in a position where they have to disclose a sensitive medical condition (e.g., pregnancy) to a Verifier in order to use their SHC. The second approach is therefore preferable.
+
+
+
+
 ### Preserving privacy: why treat exemptions differently?
 
-The data associated with a COVID-19 vaccine or lab results are relatively well-understood and generally non-sensitive in the context of a global pandemic response. So for vaccine and lab result verification, SMART Health Cards mitigates the challenge of managing different policies in different jurisdictions by conveying the raw *inputs* to these policies (e.g., "negative COVID PCR test on 2021-10-08"), rather than high-level conclusions (e.g., "is save to travel until 2021-10-10"). Even so, VCI has been very careful to produce data models that minimize the information shared in a SMART Health Card vaccine or lab result. The flexibility gained by sharing "raw" inputs in non-privacy-sensitive domains like COVID-19 vaccines lab results is a good trade-off.
 
-When it comes to exemptions, the privacy analysis is much more challenging: some reasons for an exemption may be quite sensitive and outside the scope of information generally shared in the context of everyday life. Public health policy should not put individuals in a situation where they are asked to share information about their behavior problems, religious affiliation, research participation (etc) in the course of everyday life.
-
-*Note: It doesn't help use an "unpublished data dictionary" with opaque codes for the different exemption reasons; the community will (and should!) tear apart their QRs, compare them, and reverse engineer the data dictionary in short order.*
-
-:::success
-:bulb: SMART Health Cards should represent exemptions as a broad category, rather than naming the specific condition that is the cause for an exemption.
-:::
 
 
 ### Managing exemption policies that can change over time
@@ -166,3 +239,98 @@ Unlike vaccination and testing results (where the clinical data includes effecti
 
 ##### Example QR:
 ![Example QR](https://hackmd.io/_uploads/Sk9WG404Y.png)
+
+### Relationship with SMART App Launch Framework
+
+Note that this IG is not directly related to the [SMART App Launch Framework](http://www.hl7.org/fhir/smart-app-launch/). The name comes from [SMART Health IT](https://smarthealthit.org/), who also developed the [SMART Health Card] framework that this IG supports. SMART App Launch and SMART Health Cards are designed to work well together (the former being one of multiple methods for issuing the latter), but they don't have a hard dependency with each other.
+
+
+Note that SMART Health Cards are typically not meant to be the source of truth for clinical data.
+
+
+
+
+
+
+------------------------
+
+
+
+
+# shcExemption
+
+<!-- Feel free to modify this index page with your own awesome content! -->
+
+## DRAFT
+
+### Smart Health Card Exemptions
+
+Jurisdictions may decide to distribute formal vaccination exemptions to individuals that can be used similarly to a [SMART Health Card] to show proof of their vaccination status. Individuals could use this digital copy of their exemption status, and the broad cateogrical reason for their exemption if necessary, for travel or...
+
+A SMART Health Card Exemption contains only the information necessary to indicate an indivdiual's vaccination status.
+
+    * Information Included and Displayed:
+        * Name
+        * Date of Birth
+        * Exemption Status
+        * Expiration Date/Status: This IG is not designed for lifetime exemptions. Exemptions must expire within 365 days, after which the individual can reobtain an exemption if the jurisdication issuing exemptions wishes to re-issue an exemption.
+
+### Scope
+
+
+
+### Actors
+
+
+
+
+### Use Cases
+
+Our primary focus is on the use case of representing the minimal set of clinical data necessary to represent vaccination exemptions for verification purposes in a SMART Health Card. To meet these use cases, we provide profiles of a [FHIR Bundle](https://www.hl7.org/fhir/bundle.html) that describes the contents of [the `fhirBundle` element in a SMART Health Card](https://spec.smarthealth.cards/#data-model). We also provide profiles of the resources contained within this Bundle.
+
+The SMART Health Cards Framework constrains the size of the FHIR payload embedded within a SMART Health Card to allow the entirety of the SMART Health Card to fit within [a single Version 22 QR code](https://spec.smarthealth.cards/#chunking). This IG is designed to support creating resources that fit within these size constraints. (While it is possible to generate a [denser QR code](https://www.qrcode.com/en/about/version.html), the [SMART Health Cards Framework] developers found that denser QR codes could be difficult to scan.) SMART Health Card payloads are compressed, so the precise number of available uncompressed bytes for the embedded FHIR Bundle is not knowable (the compression ratio depends on the specific content being compressed). In practice, we have found that bundles of resources conforming to the [data minimization profiles](profiles.html#data-minimization) in this IG do fit within the payload constraints.
+
+Due to these size constraints and to preserve patient privacy, information that is not necessary for Verifiers SHALL NOT be included in SMART Health Cards. With respect to individuals' privacy, note that when a SMART Health Card is issued, it is [cryptographically signed](https://spec.smarthealth.cards/#signing-health-cards) by the Issuer. This means that the contents, including the FHIR Bundle, cannot be changed without invalidating the signature. It is therefore critical for Issuers to exclude any information that could represent a privacy risk to a patient when presenting their SMART Health Card to a Verifier.
+
+**Types of Exemptions:**
+
+    * Generic: An exemption that is issued to any patient that requires one, regardless of the reason or intent for obtaining an exemption.
+    * Medical: An exemption that is issued to a patient with a medical reason that prevents them from receiving a vaccination. The exact medical reason SHALL NOT be documented in the SHC Exemption to protect patient privacy.
+    * Religious: An exemption that is issued to a patient with sincerely held religious beliefs that prevent them from receiving a vaccination. The exact religion SHALL NOT be documented in the SHC Exemption to protect patient privacy.
+    * Vaccine-Not-Available: An exemption that is issued to a patient who is unable to access vaccination services, most likely due to accessibility or availability challenges.
+
+#### Use case 1: Uniform Exemption
+
+A jurisdiction only issues generic exemptions from vaccines, without the need to identify the reason for the exemption.
+
+#### Use case 2: Specific Exemption Types
+
+A jurisdiction issues different types of exemptions from vaccines like medical, religious, or accessibility contraints that prevent vaccination and needs to identify which exemption an individual holds.
+
+### Innappropriate Use Cases for Exemptions
+
+An exemption SHALL NOT be used for:
+    * An instance in which another more specific SHC could be used; an exmeption is not intended to replace other SHCs
+    * To indicate current or prior infection with the same disease for which a SHC could be issued. A lab test result or antibody titer lab test should be used if available
+    * Medical conditions that are not related to the infectious disease documented in the SHC in a way that identifies the condition
+
+
+### Example Use Case and Implementation
+
+Province A's Health Department issues two types of exemptions: medical and vaccine-not-available. The dep need to differentiate between the two in SHC's.
+
+**Place Holder**
+
+### Terminology Bindings
+
+This IG uses [extensible binding](http://hl7.org/fhir/r4/valueset-binding-strength.html), meaning the concept in this element SHALL be from the specified value set if any of the codes within the value set can apply to the concept being communicated. If the value set does not cover the concept (based on human review), alternate codings (or, data type allowing, text) may be included instead.
+
+This degree of strength was selected to maintain as much uniformity across exemption developers as posisble, while still allowing flexibility to accommodate local requirements for vaccination exemptions.
+
+### Author Contact Information
+
+This FHIR Implementation Guide was initially developed by [VCI](https://vci.org), and is currently [an HL7 project](https://confluence.hl7.org/display/PHWG/SMART+Health+Cards+-+Vaccination+and+Testing+IG+Project+Page) sponsored by the [Public Health Work Group](https://confluence.hl7.org/display/PHWG/Public+Health+Work+Group).
+
+Please direct questions or comments about this IG to the channels listed [here](contact.html).
+
+----
