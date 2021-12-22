@@ -231,3 +231,5 @@ table.lmap td {
     "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
     "Helvetica Neue", sans-serif;
 }
+
+img[alt="Example QR"] {width: 100%;}
