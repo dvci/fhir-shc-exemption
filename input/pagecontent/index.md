@@ -1,10 +1,10 @@
-# SMART Health Card Exemptions
+## SMART Health Card Exemptions
 
 Please note that **conveying "vaccination exemption status" is beyond the [SMART Health Cards] (SHCs) design intent.** However, some jurisdictions may wish to pursue an formal exemption option for their constituents. [VCI](https://vci.org) has developed this [FHIR Implementation Guide](https://www.hl7.org/fhir/implementationguide.html) (IG) to describe the relevant policy and technical considerations.
 
 <br>
 
-## SHC design principles
+### SHC design principles
 
 The [SHC specification](https://spec.smarthealth.cards) is focused on facilitating the sharing of digitally signed "immutable clinical facts," such as the record of a specific vaccine dose or lab result.
 
@@ -12,7 +12,7 @@ SHCs accomplish this by balancing information content (i.e., details that a veri
 
 <div class="well" markdown="1">
 
-### Privacy by design
+##### Privacy by design
 
 Special attention is payed in this IG to protecting the privacy of Holders.
 
@@ -35,7 +35,7 @@ A SMART Health Card Exemption contains only the information necessary to indicat
 
 <br>
 
-## Actors
+### Actors
 
 In order to describe these considerations, it is necessary to first establish the primary actors in the typical SHC workflow:
 
@@ -47,7 +47,7 @@ Issuers and Verifiers are considered "implementers" of this IG. Additionally, "w
 
 <br>
 
-## Policy Considerations
+### Policy Considerations
 
 **Do vaccination exemption SHCs provide utility to these actors?**
 
@@ -67,7 +67,7 @@ Recommendation: Policymakers should consider the utility of issuing vaccination 
 
 <br>
 
-## Interoperability Considerations
+### Interoperability Considerations
 
 **Is interoperability between jurisdictions realistic?**
 
@@ -110,7 +110,7 @@ Recommendation: SMART Health Cards should represent exemptions as the broad cate
 </div>
 
 
-## Reasons for Exemptions and Why They Should Be Included
+### Reasons for Exemptions and Why They Should Be Included
 
 Jurisdictions designing exemption policies may have various reasons for issuing exemptions to some of their population. A key policy question is whether an individual is treated differently based on the *nature* of the exemption and whether an exemption will be recognized in another jurisdiction. For example, jurisdiction could provide exemptions for reasons as diverse as:
 
@@ -140,24 +140,25 @@ Whatever the level of policy aggregation, an Exemption represented in a SMART He
 
 To balance the need to protect individual privacy, public health, and interoperability, this implementation guide allows for three types of exemptions:
 
-    * Medical: An exemption that is issued to a patient with a medical reason that prevents them from receiving a vaccination. The exact medical reason SHALL NOT be documented in the SHC Exemption to protect patient privacy.
-    * Religious: An exemption that is issued to a patient with sincerely held religious beliefs that prevent them from receiving a vaccination. The exact religion SHALL NOT be documented in the SHC Exemption to protect patient privacy.
-    * Vaccine-Not-Available: An exemption that is issued to a patient who is unable to access vaccination services, most likely due to accessibility or availability challenges.
+* Medical: An exemption that is issued to a patient with a medical reason that prevents them from receiving a vaccination. The exact medical reason SHALL NOT be documented in the SHC Exemption to protect patient privacy.
+* Religious: An exemption that is issued to a patient with sincerely held religious beliefs that prevent them from receiving a vaccination. The exact religion SHALL NOT be documented in the SHC Exemption to protect patient privacy.
+* Vaccine-Not-Available: An exemption that is issued to a patient who is unable to access vaccination services, most likely due to accessibility or availability challenges.
 
 <br>
 
-## Innappropriate Use Cases for Exemptions
+### Innappropriate Use Cases for Exemptions
 
 An exemption SHALL NOT be used for:
-    * An instance in which another more specific SHC could be used; an exmeption is not intended to replace other SHCs
-    * To indicate current or prior infection with the same disease for which a SHC could be issued. A lab test result or antibody titer lab test should be used if available
-    * Medical conditions that are not related to the infectious disease documented in the SHC in a way that identifies the condition
+
+* An instance in which another more specific SHC could be used; an exmeption is not intended to replace other SHCs
+* To indicate current or prior infection with the same disease for which a SHC could be issued. A lab test result or antibody titer lab test should be used if available
+* Medical conditions that are not related to the infectious disease documented in the SHC in a way that identifies the condition
 
 <br>
 
-## Implementation
+### Implementation
 
-There are three possible approaches to modeling a vaccination exemption:
+There are two possible approaches to modeling a vaccination exemption:
 
 1. Provide the medical condition(s) responsible for the exemption
 2. Provide a generic medical exemption without condition-specific details
@@ -199,7 +200,7 @@ This IG uses [extensible binding](http://hl7.org/fhir/r4/valueset-binding-streng
 
 This degree of strength was selected to maintain as much uniformity across exemption developers as posisble, while still allowing flexibility to accommodate local requirements for vaccination exemptions.
 
-### Example JWS Payload (annotated with comments)
+#### Example JWS Payload (annotated with comments)
 
 ```js
 {
@@ -274,11 +275,11 @@ This degree of strength was selected to maintain as much uniformity across exemp
 }
 ```
 
-### Example QR:
+#### Example QR:
 ![Example QR](https://hackmd.io/_uploads/Sk9WG404Y.png)
 
 
-### Relationship with SMART App Launch Framework
+#### Relationship with SMART App Launch Framework
 
 Note that this IG is not directly related to the [SMART App Launch Framework](http://www.hl7.org/fhir/smart-app-launch/). The name comes from [SMART Health IT](https://smarthealthit.org/), who also developed the [SMART Health Card] framework that this IG supports. SMART App Launch and SMART Health Cards are designed to work well together (the former being one of multiple methods for issuing the latter), but they don't have a hard dependency with each other.
 
