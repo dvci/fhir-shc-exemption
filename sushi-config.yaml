@@ -22,4 +22,6 @@ publisher:
 # ╰────────────────────────────────────────────────────────────────────────────────────────────────╯
 menu:
   Home: index.html
-  Artifacts: artifacts.html
+  Exemption Profile: StructureDefinition-shc-vaccination-exemption-fallback-profile.html
+  Exemption Bundle: StructureDefinition-shc-vaccination-exemption-bundle-fallback.html
+  Exemption Codes: CodeSystem-vaccination-exemption-code-system.html
