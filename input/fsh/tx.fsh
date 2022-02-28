@@ -5,7 +5,6 @@ Description: "Codes representing vaccination exemptions"
 * #vaccination-exemption "Generic vaccination exemption"
 * #medical-vaccination-exemption "Medical vaccination exemption"
 * #vaccine-not-available "The vaccine was not available for the patient"
-* #non-medical-vaccination-exemption "Non-medical vaccination exemption"
 
 ValueSet: VaccinationExemptionValueSet
 Id: vaccination-exemption-value-set

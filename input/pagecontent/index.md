@@ -26,9 +26,9 @@ In jurisdictions designing exemption policies, there are various potential reaso
 * Membership in a religious community that does not permit vaccination
 * *(etc, etc)*
 
-<span class="label label-success">Policy Recommendation</span> Convey the most general exemption status that meets real-world needs. Typically this will be a general "is exempt" status without any specifics, or one of the limited list of more specific statuses listed below (in short: medical, vaccine not available, or non-medical).
+<span class="label label-success">Policy Recommendation</span> Convey the most general exemption status that meets real-world needs. Typically this will be a general "is exempt" status without any specifics, or one of the limited list of more specific statuses listed below (in short: medical or vaccine not available). Other categories of exemptions (e.g., religious or philosophical) should be grouped into the generic `vaccination-exemption` type of exemption.
 
-While policy differences may make interoperability across jurisdictions a challenge, there are general cases where more specificity than "is exempt" has utility. For example, if Jurisdiction A allows for both medical and non-medical exemptions while Jurisdiction B only allows for medical exemptions, then if these two jurisdictions wish to coordinate to allow for mutual reciprocity of exemptions, Jurisdiction A would need to differentiate between the two types of exemptions.
+While policy differences may make interoperability across jurisdictions a challenge, there are general cases where more specificity than a generic "all exemptions" type has utility. For example, if Jurisdiction A allows for both medical and non-medical exemptions while Jurisdiction B only allows for medical exemptions, then if these two jurisdictions wish to coordinate to allow for mutual reciprocity of exemptions, Jurisdiction A would need to differentiate between the two types of exemptions. Jurisdiction A should do this by using a "medical exemption" (e.g., `medical-vaccination-exemption`) type for medical exemptions, and a generic type (e.g., `vaccination-exemption`) for all other exemption reasons.
 
 #### Preserving privacy: why treat exemptions differently?
 
@@ -38,7 +38,7 @@ When it comes to exemptions, the privacy analysis is much more challenging: some
 
 *Note: It doesn't help to use an "unpublished data dictionary" with opaque codes for the different exemption reasons; the community will (and should!) tear apart their QRs, compare them, and reverse engineer the data dictionary in short order.*
 
-<span class="label label-warning">Technical Recommendation</span> SMART Health Cards should represent exemptions as a broad category, rather than naming the specific condition that is the cause for an exemption. These categories should be no more specific than "medical exemption" or "non-medical exemption", and in some cases a generic "is exempt" status will be sufficient.
+<span class="label label-warning">Technical Recommendation</span> SMART Health Cards should represent exemptions as a broad category, rather than naming the specific condition that is the cause for an exemption. These categories should be no more specific than "medical exemption" or "vaccine not available", and in some cases a generic "vaccination exemption" status will be sufficient.
 
 #### Managing exemption policies that can change over time
 
@@ -83,14 +83,13 @@ A jurisdiction only issues generic exemptions from vaccines, without the need to
 
 ##### Use case 2: Specific Exemption Types
 
-A jurisdiction issues different types of exemptions from vaccines like medical, non-medical, or accessibility constraints that prevent vaccination and needs to identify which exemption an individual holds.
+A jurisdiction issues different types of exemptions from vaccines like medical or accessibility constraints that prevent vaccination and needs to identify which exemption an individual holds.
 
 These types of exemptions may include:
 
-- **Generic:** An exemption that is issued to any patient that requires one, regardless of the reason or intent for obtaining an exemption.
-- **Medical:** An exemption that is issued to a patient with a medical reason that prevents them from receiving a vaccination. The exact medical reason SHALL NOT be documented in the SHC Exemption to protect patient privacy.
-- **Vaccine not available:** An exemption that is issued to a patient who is unable to access vaccination services, most likely due to accessibility or availability challenges.
-- **Non-medical:** An exemption that is issued to a patient for non-medical reasons, including religious or philosophical objections to receiving a vaccine. Details about the reason (e.g., specific religion or philosophy) SHALL NOT be documented in the SHC Exemption to protect patient privacy.
+- **Generic** (`vaccination-exemption`): An exemption that is issued to any patient that requires one, regardless of the reason or intent for obtaining an exemption.
+* **Medical** (`medical-vaccination-exemption`): An exemption that is issued to a patient with a medical reason that prevents them from receiving a vaccination, such as contraindications or safety concerns based on the patient's medical history. The exact medical reason for the exemption SHALL NOT be documented in the SHC Exemption to protect patient privacy.
+- **Vaccine not available** (`vaccine-not-available`): An exemption that is issued to a patient who is unable to access vaccination services, most likely due to accessibility or availability challenges.
 
 ##### Out of scope
 
@@ -135,8 +134,8 @@ The SMART Health Cards Framework constrains the size of the FHIR payload embedde
 1. Model `Condition.category` with a FHIR Coding that includes
     * `system`:  Public URL of a jurisdictional policy.
         * E.g. `https://travel.gc.ca/travel-covid/travel-restrictions/exemptions`
-    * `code`: Fixed value independent of exemption *reason* (or at most differentiating between medical and non-medical exemptions)
-      * e.g., `vaccine-exemption`, `medical-vaccine-exemption`, or `non-medical-vaccine-exemption`
+    * `code`: Fixed value independent of exemption *reason* (or at most differentiating between medical, vaccine not available, or general exemptions)
+      * e.g., `vaccination-exemption`, `medical-vaccination-exemption`, or `vaccine-not-available`
     * `version`: Date of most recent update to the policy at time of issuance.
       * E.g. `2021-10-08`
 1. Model `Condition.recordedDate` as an optional field
