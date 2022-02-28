@@ -1,8 +1,8 @@
 ### Summary
 
-[SMART Health Cards] (SHCs) focus on sharing "immutable clinical facts" like the record of a specific vaccine dose or lab result. Our data models have been designed to balance information content (i.e., details that a verifier needs in order to make a decision) with user privacy (i.e., to avoid over-sharing, and to avoid sharing sensitive information).
+[SMART Health Cards] (SHCs) focus on sharing "immutable clinical facts" like the record of a specific vaccine dose or lab result. Our data models have been designed to balance information content (i.e., details that a verifier needs in order to make a decision) with user privacy (i.e., to avoid over-sharing and to avoid sharing sensitive information).
 
-Beyond simply requiring proof of vaccination or lab results, some jurisdictions are developing policies that assign an "exemption" status to individuals who can't or shouldn't or otherwise won't receive a vaccine. There is interest in developing an interoperable way to share these exemption details with verifiers.
+Beyond simply requiring proof of vaccination or lab results, some jurisdictions are developing policies that assign an "exemption" status to individuals who can't, shouldn't, or otherwise won't receive a vaccine. There is interest in developing an interoperable way to share these exemption details with verifiers.
 
 <span class="label label-danger">Please Note</span> **Conveying "exemption status" is beyond the [SMART Health Cards] design intent.** Additionally, conveying the clinical (or other relevant) facts behind an exemption raises significant privacy concern. As some jurisdictions may wish to move ahead in this space, [VCI](https://vci.org) has developed this [FHIR Implementation Guide](https://www.hl7.org/fhir/implementationguide.html) (IG) to describe the relevant policy and technical considerations.
 
@@ -14,7 +14,7 @@ Beyond simply requiring proof of vaccination or lab results, some jurisdictions 
 
 Vaccination policies vary widely by jurisdiction. Exemption policies will vary even more widely. A key policy question is whether an "exempt" individual is treated differently from an otherwise-unvaccinated individual. For example, does a "vaccine exempt" individual have more lenient testing or quarantine requirements (compared with an otherwise-unvaccinated individual) upon arrival at a travel destination? In real-world travel use cases, the answer has been predominantly "no" (with a strong basis in public health and risk mitigation, when "exempt" does not imply lower-risk).
 
-<span class="label label-success">Policy Recommendation</span> For international travel, an interoperable approach to exemptions may not be needed.
+<span class="label label-success">Policy Recommendation</span> For international travel, an interoperable approach to exemptions may be unnecessary.
 
 #### Utility in differentiating among reasons for exemption
 
@@ -28,13 +28,13 @@ In jurisdictions designing exemption policies, there are various potential reaso
 
 <span class="label label-success">Policy Recommendation</span> Convey the most general exemption status that meets real-world needs. Typically this will be a general "is exempt" status without any specifics, or one of the limited list of more specific statuses listed below (in short: medical or vaccine not available). Other categories of exemptions (e.g., religious or philosophical) should be grouped into the generic `vaccination-exemption` type of exemption.
 
-While policy differences may make interoperability across jurisdictions a challenge, there are general cases where more specificity than a generic "all exemptions" type has utility. For example, if Jurisdiction A allows for both medical and non-medical exemptions while Jurisdiction B only allows for medical exemptions, then if these two jurisdictions wish to coordinate to allow for mutual reciprocity of exemptions, Jurisdiction A would need to differentiate between the two types of exemptions. Jurisdiction A should do this by using a "medical exemption" (e.g., `medical-vaccination-exemption`) type for medical exemptions, and a generic type (e.g., `vaccination-exemption`) for all other exemption reasons.
+While policy differences may make interoperability across jurisdictions a challenge, there are cases where more specificity than a generic "all exemptions" type has utility. For example, if Jurisdiction A allows for both medical and non-medical exemptions while Jurisdiction B only allows for medical exemptions, then if these two jurisdictions wish to coordinate to allow for mutual reciprocity of exemptions, Jurisdiction A would need to differentiate between the two types of exemptions. Jurisdiction A should do this by using a "medical exemption" (e.g., `medical-vaccination-exemption`) type for medical exemptions, and a generic type (e.g., `vaccination-exemption`) for all other exemption reasons.
 
 #### Preserving privacy: why treat exemptions differently?
 
-The data associated with a COVID-19 vaccine or lab results are relatively well-understood and generally non-sensitive in the context of a global pandemic response. So for vaccine and lab result verification, SMART Health Cards mitigates the challenge of managing different policies in different jurisdictions by conveying the raw *inputs* to these policies (e.g., "negative COVID PCR test on 2021-10-08"), rather than high-level conclusions (e.g., "is save to travel until 2021-10-10"). Even so, VCI has been very careful to produce data models that minimize the information shared in a SMART Health Card vaccine or lab result. The flexibility gained by sharing "raw" inputs in non-privacy-sensitive domains like COVID-19 vaccines lab results is a good trade-off.
+The data associated with a COVID-19 vaccine or lab results are relatively well-understood and generally non-sensitive in the context of a global pandemic response. So for vaccine and lab result verification, SMART Health Cards mitigate the challenge of managing different policies in different jurisdictions by conveying the raw *inputs* to these policies (e.g., "negative COVID PCR test on 2021-10-08"), rather than high-level conclusions (e.g., "is safe to travel until 2021-10-10"). Even so, VCI has been very careful to produce data models that minimize the information shared in a SMART Health Card vaccine or lab result. The flexibility gained by sharing "raw" inputs in non-privacy-sensitive domains like COVID-19 vaccines lab results is a good trade-off.
 
-When it comes to exemptions, the privacy analysis is much more challenging: some reasons for an exemption may be quite sensitive and outside the scope of information generally shared in the context of everyday life. Public health policy should not put individuals in a situation where they are asked to share information about their behavior problems, religious affiliation, research participation (etc.) in the course of everyday life.
+When it comes to exemptions, the privacy analysis is much more challenging: some reasons for an exemption may be quite sensitive and outside the scope of information generally shared in the context of everyday life. Public health policy should not put individuals in a situation where they are asked to share information about their behavioral challenges, religious affiliation, research participation (etc.) in the course of everyday life.
 
 *Note: It doesn't help to use an "unpublished data dictionary" with opaque codes for the different exemption reasons; the community will (and should!) tear apart their QRs, compare them, and reverse engineer the data dictionary in short order.*
 
@@ -55,7 +55,7 @@ Unlike vaccination and testing results (where the clinical data includes effecti
 * "allergic to all COVID-19 vaccines" may change when new vaccines are introduced into the market
 * "participating in a research study" may change when a participant withdraws, or when  the study ends
 
-<span class="label label-success">Policy Recommendation</span> To allow for policy revisions, any exemptions issued should be time-limited, and the duration should be based on the use case driving issuance (not based on or revealing the specific cause of the exemption).
+<span class="label label-success">Policy Recommendation</span> To allow for policy revisions, any issued exemptions should be time-limited, and the duration should be based on the use case driving issuance (not based on or revealing the specific cause of the exemption).
 
 <span class="label label-warning">Technical Recommendation</span> SMART Health Cards should represent exemptions with an `exp` ("expires at") timestamp, populated with a consistent issuer-supplied interval.
 
